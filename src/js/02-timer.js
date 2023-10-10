@@ -20,36 +20,32 @@ const options = {
     time_24hr: true,
     defaultDate: new Date(),
     minuteIncrement: 1,
-    onClose(selectedDates) {
-      console.log(selectedDates[0]);
+    onClose([selectedDates]) {
 
-      if (selectedDates[0] < new Date()) {
+      if (selectedDates < Date.now()) {
         refs.startButton.disabled = true;
         Notiflix.Notify.failure('Please choose a date in the future');
         return;
       }
-
-      if (selectedDates[0] > new Date()) {
         refs.startButton.disabled = false;
-      } 
-    
-      refs.startButton.addEventListener('click', () => {
-  
-        intervalId = setInterval(() => {
-            const intervalInTime = selectedDates[0] - new Date();
-
-            if (intervalInTime < 1000) {
-                clearInterval(intervalId);
-              }
-
-              const result = convertMs(intervalInTime);
-              console.log(result);
-              updateTime(result);
-            }, 1000);
-    });
 
     },
   };
+
+  refs.startButton.addEventListener('click', () => {
+  
+    intervalId = setInterval(() => {
+        const intervalInTime = new Date(refs.input.value) - Date.now();
+
+        if (intervalInTime < 1000) {
+            clearInterval(intervalId);
+          }
+
+          const result = convertMs(intervalInTime);
+          console.log(result);
+          updateTime(result);
+        }, 1000);
+});
 
 flatpickr('#datetime-picker', options);
 
